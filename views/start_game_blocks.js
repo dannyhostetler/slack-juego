@@ -1,4 +1,4 @@
-const fibbageStartModalBlocks = (trigger_id) => {
+const startGameBlocks = (trigger_id) => {
     return {
         trigger_id: trigger_id,
         view: {
@@ -47,4 +47,4 @@ const fibbageStartModalBlocks = (trigger_id) => {
     }
 }
 
-module.exports = fibbageStartModalBlocks;
+module.exports = startGameBlocks;

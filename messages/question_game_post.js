@@ -1,9 +1,10 @@
-const fibbageQuestionBlocks = (channel, ts, question, questionId, gameId) => {
+const questionGamePost = (channel, ts, question, questionId) => {
     return {
         channel,
         ts,
         "blocks": [
             {
+                "block_id": "header_block",
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
@@ -12,6 +13,7 @@ const fibbageQuestionBlocks = (channel, ts, question, questionId, gameId) => {
             },
             {
                 "type": "actions",
+                "block_id": "answer_section",
                 "elements": [
                     {
                         "type": "button",
@@ -21,7 +23,7 @@ const fibbageQuestionBlocks = (channel, ts, question, questionId, gameId) => {
                             "emoji": true
                         },
                         "value": `${questionId}`,
-                        "action_id": `fibbage-vote-${gameId}`
+                        "action_id": `fibbage-vote-${ts}`
                     }
                 ]
             },
@@ -30,7 +32,17 @@ const fibbageQuestionBlocks = (channel, ts, question, questionId, gameId) => {
                 "elements": [
                     {
                         "type": "mrkdwn",
-                        "text": ":timer_clock: Next question in 30 seconds."
+                        "text": "Time Left: *30 seconds*"
+                    }
+                ]
+            },
+            {
+                "block_id": "answers_submitted",
+                "type": "context",
+                "elements": [
+                    {
+                        "type": "mrkdwn",
+                        "text": "Submitted:"
                     }
                 ]
             },
@@ -38,15 +50,17 @@ const fibbageQuestionBlocks = (channel, ts, question, questionId, gameId) => {
                 "type": "divider"
             },
             {
-                "block_id": "lies_submitted",
-                "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": "*Lies submitted:* "
-                }
+                "block_id": "footer_block",
+                "type": "context",
+                "elements": [
+                    {
+                        "type": "mrkdwn",
+                        "text": "*5 Questions* | *20 seconds* per question"
+                    }
+                ]
             }
         ]
     }
 }
 
-module.exports = fibbageQuestionBlocks;
+module.exports = questionGamePost;

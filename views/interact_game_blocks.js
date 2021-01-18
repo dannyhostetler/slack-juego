@@ -1,8 +1,8 @@
-const fibbageLieModalBlocks = (trigger_id, private_metadata) => {
+const interactGameBlocks = (trigger_id, private_metadata) => {
     return {
-        trigger_id: trigger_id,
+        trigger_id,
         view: {
-            callback_id: "fibbage_question_lie",
+            callback_id: "fibbage_question_answer",
             private_metadata,
             type: "modal",
             title: {
@@ -15,7 +15,7 @@ const fibbageLieModalBlocks = (trigger_id, private_metadata) => {
             },
             submit: {
                 type: "plain_text",
-                text: "Start"
+                text: "Enter Lie"
             },
             blocks: [
                 {
@@ -39,4 +39,4 @@ const fibbageLieModalBlocks = (trigger_id, private_metadata) => {
     }
 }
 
-module.exports = fibbageLieModalBlocks;
+module.exports = interactGameBlocks;
