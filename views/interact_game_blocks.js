@@ -2,7 +2,7 @@ const interactGameBlocks = (trigger_id, private_metadata) => {
     return {
         trigger_id,
         view: {
-            callback_id: "fibbage_question_answer",
+            callback_id: "game_answer_entered",
             private_metadata,
             type: "modal",
             title: {
@@ -20,7 +20,7 @@ const interactGameBlocks = (trigger_id, private_metadata) => {
             blocks: [
                 {
                     "type": "input",
-                    "block_id": "input123",
+                    "block_id": "answer",
                     "label": {
                         "type": "plain_text",
                         "text": "Enter your Lie"

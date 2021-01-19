@@ -1,4 +1,4 @@
-const questionGamePost = (channel, ts, question, questionId) => {
+const questionGamePost = (channel, ts, question) => {
     return {
         channel,
         ts,
@@ -8,7 +8,7 @@ const questionGamePost = (channel, ts, question, questionId) => {
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": question
+                    "text": `${question.currentQuestion}. ${question.question}`
                 }
             },
             {
@@ -22,7 +22,7 @@ const questionGamePost = (channel, ts, question, questionId) => {
                             "text": "Enter Lie",
                             "emoji": true
                         },
-                        "value": `${questionId}`,
+                        "value": `${question.questionId}`,
                         "action_id": `fibbage-vote-${ts}`
                     }
                 ]
@@ -55,7 +55,7 @@ const questionGamePost = (channel, ts, question, questionId) => {
                 "elements": [
                     {
                         "type": "mrkdwn",
-                        "text": "*5 Questions* | *20 seconds* per question"
+                        "text": `Question ${question.currentQuestion} of ${question.totalQuestions} | *30 seconds* per question`
                     }
                 ]
             }

@@ -1,4 +1,4 @@
-const answersGamePost = (channel, ts, question, questionId, answers) => {
+const answersGamePost = (channel, ts, question, answers) => {
     let answersArray = [];
 
     answers.map((answer) => {
@@ -9,8 +9,8 @@ const answersGamePost = (channel, ts, question, questionId, answers) => {
                 "text": answer.text,
                 "emoji": true
             },
-            "value": questionId,
-            "action_id": `fibbage-answer-select-${answer.answerId}`
+            "value": question.questionId,
+            "action_id": `game_answer_selected_${answer.answerId}`
         })
     })
 
@@ -22,7 +22,7 @@ const answersGamePost = (channel, ts, question, questionId, answers) => {
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": question
+                    "text": `${question.currentQuestion}. ${question.question}`
                 }
             },
             {
@@ -50,7 +50,7 @@ const answersGamePost = (channel, ts, question, questionId, answers) => {
                 "elements": [
                     {
                         "type": "mrkdwn",
-                        "text": "*5 Questions* | *20 seconds* per question"
+                        "text": `Question ${question.currentQuestion} of ${question.totalQuestions} | *30 seconds* per question`
                     }
                 ]
             }

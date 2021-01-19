@@ -1,4 +1,14 @@
-const answerResultsPost = (channel, ts, question, results, thread_ts) => {
+const answerResultsPost = (channel, ts, question, answers, results) => {
+    // TODO: This block can be more efficient
+    let answersString;
+    answers.forEach((answer) => {
+        if(answersString == null) {
+            answersString = (answer.truth === true) ? `:white_check_mark: ${answer.text}` : `:x: ${answer.text}`
+        } else {
+            answersString = (answer.truth === true) ? `${answersString}\n:white_check_mark: ${answer.text}` : `${answersString}\n:x: ${answer.text}`
+        }
+    });
+    
     return {
         channel,
         ts,
@@ -8,7 +18,14 @@ const answerResultsPost = (channel, ts, question, results, thread_ts) => {
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": question
+                    "text": `${question.currentQuestion}. ${question.question}`
+                }
+            },
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": answersString
                 }
             },
             {
@@ -30,7 +47,7 @@ const answerResultsPost = (channel, ts, question, results, thread_ts) => {
                 "elements": [
                     {
                         "type": "mrkdwn",
-                        "text": "*5 Questions* | *20 seconds* per question"
+                        "text": `Question ${question.currentQuestion} of ${question.totalQuestions} | *30 seconds* per question`
                     }
                 ]
             }

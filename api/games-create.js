@@ -4,20 +4,33 @@ const { guid } = require('../helpers');
 const newGame = (gameId, userId) => {
     const AWS_API_URL = process.env.AWS_API_ROOT;
 
-    const questionId = guid();
+    const questionId1 = "53d10910-e9d0-7ea6-9890-74e1c37eeb61";
+    const questionId2 = "8cd9ee6a-b823-52ee-d2d6-904d4e373a6f";
+
     return axios.post(`${AWS_API_URL}/v1/games-create`, {
         gameId,
         questions: [
             {
-                questionId,
+                "questionId": questionId1,
                 "question": "What year was Slack founded?"
+            },
+            {
+                "questionId": questionId2,
+                "question": "Who is the CEO of Slack?"
             }
         ],
         answers: [
             {
                 "answerId": guid(),
-                questionId,
+                "questionId": questionId1,
                 "text": "2013",
+                "truth": true,
+                "userId": null
+            },
+            {
+                "answerId": guid(),
+                "questionId": questionId2,
+                "text": "Steward Butterfield",
                 "truth": true,
                 "userId": null
             }
