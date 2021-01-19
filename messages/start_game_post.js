@@ -7,7 +7,7 @@ const startGamePost = (channelId, userId) => {
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": `:wave: @here Hi Everyone! \n\n <@${userId}> has started a game of Fibbage! Fibbage is the lying, bluffing, fib-till-you-win trivia party game. Fool your friends with your lies, avoid theirs, and find the (usually outrageous) truth.\n\n :timer_clock: The game will begin in 30 seconds. \n\nClick *Join Fibbage* to play.`
+                    "text": `:wave: @here Hi Everyone! \n\n <@${userId}> has started a game of Fibbage! Fibbage is the lying, bluffing, fib-till-you-win trivia party game. Fool your colleagues with your lies, avoid theirs, and find the (usually outrageous) truth.\n\n :timer_clock: The game will begin in 30 seconds. \n\nClick *Join Fibbage* to play.`
                 }
             },
             {
@@ -23,7 +23,7 @@ const startGamePost = (channelId, userId) => {
                         },
                         "style": "primary",
                         "value": "Join Fibbage",
-                        "action_id": `fibbage-join`
+                        "action_id": `game_join`
                     }
                 ]
             },

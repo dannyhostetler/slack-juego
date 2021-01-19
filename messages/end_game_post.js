@@ -7,7 +7,7 @@ const endGamePost = (channel, ts) => {
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": "Game Over!"
+                    "text": "We just completed a game of Fibbage. Here are the results:"
                 }
             }
         ]

@@ -8,8 +8,6 @@ const api = require('./api');
 const views = require('./views');
 const messages = require('./messages');
 
-const AWS_API_URL = process.env.AWS_API_ROOT;
-
 const app = new App({
     receiver
 });
@@ -23,7 +21,7 @@ app.event('app_home_opened', async ({ event, client, say }) => {
     }
 });
 
-app.shortcut('start_fibbage', async ({ shortcut, ack, client }) => {
+app.shortcut('start_game', async ({ shortcut, ack, client }) => {
     // Acknowledge Shortcut
     await ack();
 
@@ -35,7 +33,9 @@ app.shortcut('start_fibbage', async ({ shortcut, ack, client }) => {
 });
 
 app.view('fibbage_question_answer', async ({ ack, body, view, client }) => {
+    // Acknowledge View Submission
     await ack();
+
     try {
         const userId = body.user.id;
         const { blocks, gameId, channel_id, questionId } = JSON.parse(view.private_metadata)
@@ -46,17 +46,20 @@ app.view('fibbage_question_answer', async ({ ack, body, view, client }) => {
                 questionId,
                 text: view.state.values.input123.plain_input.value,
                 userId,
+                selections: 0,
                 truth: false
             }
         });
         const { answers } = gameUpdate.data.body.Attributes
 
+        // TODO: This block can be more efficient
         let playersString;
         answers.forEach((answer) => {
             if (answer.questionId == questionId && answer.userId != null) {
                 playersString = (playersString == null) ? `<@${answer.userId}>` : `${playersString}, <@${answer.userId}>`
             }
         });
+
         // TODO: This block can be more efficient
         for (let i = 0; i < blocks.length; i++) {
             if (blocks[i].block_id == 'answers_submitted') {
@@ -74,8 +77,8 @@ app.view('fibbage_question_answer', async ({ ack, body, view, client }) => {
     }
 });
 
-app.view('fibbage_started', async ({ ack, body, view, client }) => {
-    // Acknowledge Callback from Slack
+app.view('game_started', async ({ ack, body, view, client }) => {
+    // Acknowledge View Submission
     await ack();
 
     const { response_url, channel_id } = body.response_urls[0];
@@ -195,7 +198,7 @@ app.action(/^fibbage-vote.*$/, async ({ ack, body, client }) => {
     }
 })
 
-app.action(/^fibbage-join.*$/, async ({ ack, body, say, client }) => {
+app.action(/^game_join.*$/, async ({ ack, body, say, client }) => {
     // Acknowledge Callback from Slack
     await ack();
 
@@ -217,7 +220,7 @@ app.action(/^fibbage-join.*$/, async ({ ack, body, say, client }) => {
 
         let playersString;
         players.forEach((player) => {
-            playersString = (playersString == null) ? `<@${player}>` : `${playersString}, <@${player}>`
+            playersString = (playersString == null) ? `<@${player.userId}>` : `${playersString}, <@${player.userId}>`
         });
 
         // TODO: This block can be more efficient

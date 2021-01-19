@@ -25,7 +25,10 @@ const newGame = (gameId, userId) => {
         selections: [],
         numberOfPlayers: 1,
         players: [
-            userId
+            {
+                userId,
+                score: 0
+            }
         ]
     }, {
         headers: {

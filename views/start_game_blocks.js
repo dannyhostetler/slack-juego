@@ -2,7 +2,7 @@ const startGameBlocks = (trigger_id) => {
     return {
         trigger_id: trigger_id,
         view: {
-            callback_id: "fibbage_started",
+            callback_id: "game_started",
             type: "modal",
             title: {
                 type: "plain_text",
