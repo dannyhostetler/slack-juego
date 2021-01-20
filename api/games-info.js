@@ -1,5 +1,9 @@
 const { default: axios } = require('axios');
 
+/**
+ * This function accepts a Game ID then retreives game information from the database.
+ * @param {string} gameId 
+ */
 const gameInfo = (gameId) => {
     const AWS_API_URL = process.env.AWS_API_ROOT;
 

@@ -1,3 +1,12 @@
+/**
+ * This function will return the blocks necessary to display game answer results
+ * @param {string} channel 
+ * @param {string} ts 
+ * @param {Object} question 
+ * @param {Array} answers 
+ * @param {Array} results 
+ */
+
 const answerResultsPost = (channel, ts, question, answers, results) => {
     // TODO: This block can be more efficient
     let answersString;

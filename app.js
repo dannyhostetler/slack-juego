@@ -8,6 +8,9 @@ const api = require('./api');
 const views = require('./views');
 const messages = require('./messages');
 
+/**
+ * Create an instace of the Bolt App using the receiver configuration
+ */
 const app = new App({
     receiver
 });
@@ -22,8 +25,7 @@ app.event('app_home_opened', async ({ event, client, say }) => {
 });
 
 app.shortcut('start_game', async ({ shortcut, ack, client }) => {
-    // Acknowledge Shortcut
-    await ack();
+    await ack(); // Acknowledge Shortcut
 
     try {
         await client.views.open(views.startGameBlocks(shortcut.trigger_id));
@@ -33,8 +35,7 @@ app.shortcut('start_game', async ({ shortcut, ack, client }) => {
 });
 
 app.view('game_started', async ({ ack, body, view, client }) => {
-    // Acknowledge View Submission
-    await ack();
+    await ack(); // Acknowledge View Submission
 
     try {
         const { response_url, channel_id } = body.response_urls[0];
@@ -53,7 +54,7 @@ app.view('game_started', async ({ ack, body, view, client }) => {
             // Loop through all the game questions
             for await (let gameQuestion of gameQuestions) {
                 // Waiting for 30 seconds for players to enter answers "lies" for game
-                await timeout(15000);
+                await timeout(30000);
 
                 gameQuestion.totalQuestions = gameQuestions.length;
                 gameQuestion.currentQuestion = questionNumber;
@@ -62,7 +63,7 @@ app.view('game_started', async ({ ack, body, view, client }) => {
                 await client.chat.update(messages.questionGamePost(channel_id, ts, gameQuestion));
 
                 // Waiting for 30 seconds for players to enter answers "lies" to question
-                await timeout(15000);
+                await timeout(30000);
 
                 // Retreive game info
                 gameInfo = await api.gameInfo(ts);
@@ -76,7 +77,7 @@ app.view('game_started', async ({ ack, body, view, client }) => {
                 await client.chat.update(messages.answersGamePost(channel_id, ts, gameQuestion, filteredAnswers));
 
                 // Waiting for 30 seconds for players to select answers to question
-                await timeout(15000);
+                await timeout(30000);
 
                 // Retreive game info
                 gameInfo = await api.gameInfo(ts);
@@ -115,8 +116,7 @@ app.view('game_started', async ({ ack, body, view, client }) => {
 });
 
 app.view('game_answer_entered', async ({ ack, body, view, client }) => {
-    // Acknowledge View Submission
-    await ack();
+    await ack(); // Acknowledge View Submission
 
     try {
         const userId = body.user.id;
@@ -169,7 +169,7 @@ app.view('game_answer_entered', async ({ ack, body, view, client }) => {
 
 
 app.action(/^game_answer_selected.*$/, async ({ ack, body, client }) => {
-    await ack();
+    await ack(); // Acknowledge Callback
 
     try {
         const gameId = body.message.ts;
@@ -216,8 +216,7 @@ app.action(/^game_answer_selected.*$/, async ({ ack, body, client }) => {
 });
 
 app.action(/^fibbage-vote.*$/, async ({ ack, body, client }) => {
-    // Acknowledge Block Action
-    await ack();
+    await ack(); // Acknowledge Block Action
 
     try {
         const trigger_id = body.trigger_id;
@@ -234,8 +233,7 @@ app.action(/^fibbage-vote.*$/, async ({ ack, body, client }) => {
 })
 
 app.action(/^game_join.*$/, async ({ ack, body, say, client }) => {
-    // Acknowledge Callback from Slack
-    await ack();
+    await ack(); // Acknowledge Callback from Slack
 
     try {
         const userId = body.user.id;

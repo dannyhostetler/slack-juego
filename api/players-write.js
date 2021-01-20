@@ -1,5 +1,9 @@
 const { default: axios } = require('axios');
-
+/**
+ * This function accepts a Player ID (Slack User ID) and Score to create or update player information in the database.
+ * @param {string} playerId 
+ * @param {string} score
+ */
 const playerWrite = (playerId, score) => {
     const AWS_API_URL = process.env.AWS_API_ROOT;
 

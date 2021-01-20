@@ -1,20 +1,20 @@
 const { ExpressReceiver } = require('@slack/bolt');
 const { default: axios } = require('axios');
 require('dotenv').config();
+const { guid } = require('../helpers');
 
-const scopes = ['chat:write', 'commands', 'users:read'];
+const scopes = ['chat:write', 'chat:write:public', 'commands', 'users:read'];
 const AWS_API_URL = process.env.AWS_API_ROOT;
 
 const receiver = new ExpressReceiver({
         signingSecret: process.env.SLACK_SIGNING_SECRET,
         clientId: process.env.SLACK_CLIENT_ID,
         clientSecret: process.env.SLACK_CLIENT_SECRET,
-        stateSecret: 'my-state-secret',
+        stateSecret: guid(),
         scopes,
         installationStore: {
             storeInstallation: async (installation) => {
-                // Installation ID is the {installation.team.id}
-                const installationId = installation.team.id;
+                const installationId = installation.team.id; // Installation ID is the {installation.team.id}
     
                 installation.installationId = installationId;
     
@@ -45,8 +45,7 @@ const receiver = new ExpressReceiver({
                 return payload;
             },
             storeOrgInstallation: async (installation) => {
-                // Installation ID is the {installation.enterprise.id}
-                const installationId = installation.enterprise.id;
+                const installationId = installation.enterprise.id; // Installation ID is the {installation.enterprise.id}
     
                 installation.installationId = installationId;
     

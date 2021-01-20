@@ -1,5 +1,11 @@
 const { default: axios } = require('axios');
 
+/**
+ * This function accepts a Game ID, User ID and optionally Values to update game details in the database.
+ * @param {string} gameId 
+ * @param {string} userId
+ * @param {Object} values (optional) 
+ */
 const gameUpdate = (gameId, userId, values=null) => {
     const AWS_API_URL = process.env.AWS_API_ROOT;
 

@@ -1,6 +1,11 @@
 const { default: axios } = require('axios');
 const { guid } = require('../helpers');
 
+/**
+ * This function accepts a Game ID and User ID then creates a new game in the database.
+ * @param {string} gameId 
+ * @param {string} userId 
+ */
 const newGame = (gameId, userId) => {
     const AWS_API_URL = process.env.AWS_API_ROOT;
 
