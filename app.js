@@ -15,6 +15,13 @@ const app = new App({
     receiver
 });
 
+/**
+ * Listen for post requests and respond to help determine health of application
+ */
+receiver.router.post('/slack/liveness', (req, res) => {
+    res.sendStatus(200);
+})
+
 app.event('app_home_opened', async ({ event, client, say }) => {
     try {
         await say('👋 App Home opened');
@@ -38,52 +45,43 @@ app.view('game_started', async ({ ack, body, view, client }) => {
     await ack(); // Acknowledge View Submission
 
     try {
-        const { response_url, channel_id } = body.response_urls[0];
+        const { channel_id } = body.response_urls[0];
         const userId = body.user.id;
 
-        // Post to channel and create a new Fibbage game
-        const fibbagePost = await client.chat.postMessage(messages.startGamePost(channel_id, userId));
-        const { ts } = fibbagePost.message;
-        const newGame = await api.newGame(ts, userId);
+        const fibbagePost = await client.chat.postMessage(messages.startGamePost(channel_id, userId)); // Post to channel to begin game
+        const { ts } = fibbagePost.message; // ts (time stamp) will be used as the game identifier
+        const newGame = await api.newGame(ts, userId); // Create a new game
+        
+        await timeout(30000); // Wait for 30 seconds before posting question
 
         if (newGame.data.statusCode == 201) {
-            let gameInfo = await api.gameInfo(ts);
+            let gameInfo = await api.gameInfo(ts); // Get game info
             const gameQuestions = gameInfo.data.body.questions;
             let questionNumber = 1;
 
-            // Loop through all the game questions
             for await (let gameQuestion of gameQuestions) {
-                // Waiting for 30 seconds for players to enter answers "lies" for game
-                await timeout(30000);
-
                 gameQuestion.totalQuestions = gameQuestions.length;
                 gameQuestion.currentQuestion = questionNumber;
 
-                // Post game question
-                await client.chat.update(messages.questionGamePost(channel_id, ts, gameQuestion));
+                await client.chat.update(messages.questionGamePost(channel_id, ts, gameQuestion)); // Update original post to now display a question
+                await timeout(30000); // Wait (again) for 30 seconds so players can enter their answer (lie)
 
-                // Waiting for 30 seconds for players to enter answers "lies" to question
-                await timeout(30000);
-
-                // Retreive game info
-                gameInfo = await api.gameInfo(ts);
+                gameInfo = await api.gameInfo(ts); // Get game info (again)
                 const { answers } = gameInfo.data.body;
 
                 let filteredAnswers = answers.filter((answer) => {
                     return answer.questionId === gameQuestion.questionId
                 });
 
-                // Post game answer options
-                await client.chat.update(messages.answersGamePost(channel_id, ts, gameQuestion, filteredAnswers));
+                await client.chat.update(messages.answersGamePost(channel_id, ts, gameQuestion, filteredAnswers)); // Update original post to now display available selections
+                await timeout(30000); // Wait (again) for 30 seconds so players can attempt to select the truth
 
-                // Waiting for 30 seconds for players to select answers to question
-                await timeout(30000);
-
-                // Retreive game info
-                gameInfo = await api.gameInfo(ts);
+                gameInfo = await api.gameInfo(ts); // Get game info (again)
                 const { selections } = gameInfo.data.body;
 
-                // TODO: These blocks can be more efficient
+                /**
+                 * @todo There is a more efficient and eloquent way to set up the finalPlayersString
+                 */
                 let correctSelections = selections.filter((selection) => {
                     return (selection.correct === true) && (selection.questionId === gameQuestion.questionId);
                 });
@@ -93,21 +91,19 @@ app.view('game_started', async ({ ack, body, view, client }) => {
                 });
                 const finalPlayersString = (correctSelections.length > 0) ? `:partying_face: Nice! ${playersString}` : `:cricket: No one selected the truth!`;
 
-                //await client.chat.update(messages.answerResultsPost(channel_id, ts, gameQuestion.question, filteredAnswers, finalPlayersString));
-                await client.chat.update(messages.answerResultsPost(channel_id, ts, gameQuestion, filteredAnswers, finalPlayersString));
-                await timeout(5000);
-                await client.chat.postMessage(messages.answerResultsReply(channel_id, ts, gameQuestion, filteredAnswers, finalPlayersString));
+                await client.chat.update(messages.answerResultsPost(channel_id, ts, gameQuestion, filteredAnswers, finalPlayersString)); // Update original post to display question results
+                await timeout(7000);
+                await client.chat.postMessage(messages.answerResultsReply(channel_id, ts, gameQuestion, filteredAnswers, finalPlayersString)); // Thread question results as a reply
+                await timeout(1000);
 
                 questionNumber += 1;
             }
-            // Retreive game info
-            gameInfo = await api.gameInfo(ts);
+            gameInfo = await api.gameInfo(ts); // Get game info (again)
             const { players } = gameInfo.data.body;
-            await client.chat.update(messages.endGamePost(channel_id, ts, players));
+            await client.chat.update(messages.endGamePost(channel_id, ts, players)); // Update original with final game results
 
-            // Update the Player records
             players.forEach(async (player) => {
-                await api.playerWrite(player.userId, player.score);
+                await api.playerWrite(player.userId, player.score); // Update the player records
             });
         }
     } catch (e) {
@@ -134,7 +130,6 @@ app.view('game_answer_entered', async ({ ack, body, view, client }) => {
         });
 
         if (gameUpdate.data.statusCode == 202) {
-            console.log("Answer already entered");
             // Send an ephemeral message
             // A 202 indicates that the player has already entered an answer
             return;
@@ -188,9 +183,8 @@ app.action(/^game_answer_selected.*$/, async ({ ack, body, client }) => {
         });
 
         if (gameUpdate.data.statusCode == 202) {
-            console.log("Player already selected an answer.");
             // Send an ephemeral message
-            // A 202 indicates that the player has already entered an answer
+            // A 202 indicates that the player has already selected an answer
             return;
         }
 
