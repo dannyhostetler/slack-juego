@@ -18,7 +18,7 @@ const app = new App({
 /**
  * Listen for post requests and respond to help determine health of application
  */
-receiver.router.post('/slack/liveness', (req, res) => {
+receiver.router.get('/slack/liveness', (req, res) => {
     res.sendStatus(200);
 })
 
