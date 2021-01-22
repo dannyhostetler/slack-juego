@@ -1,5 +1,5 @@
 /**
- * The function generates a random guid whereas guids will help uniquely identify records in the database.
+ * The function generates a random guid whereas guids will help uniquely identify various records in the database.
  */
 
 const guid = () => {

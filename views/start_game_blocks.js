@@ -1,3 +1,7 @@
+/**
+ * This function will accept a trigger ID and return the blocks to display the modal view for starting a game.
+ * @param {string} trigger_id 
+ */
 const startGameBlocks = (trigger_id) => {
     return {
         trigger_id: trigger_id,

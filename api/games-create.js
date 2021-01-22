@@ -17,7 +17,7 @@ const newGame = (gameId, userId) => {
         questions: [
             {
                 "questionId": questionId1,
-                "question": "What year was Slack founded?"
+                "question": "In which city is Slack headquartered?"
             },
             {
                 "questionId": questionId2,
@@ -28,7 +28,7 @@ const newGame = (gameId, userId) => {
             {
                 "answerId": guid(),
                 "questionId": questionId1,
-                "text": "2013",
+                "text": "San Francisco",
                 "truth": true,
                 "userId": null
             },

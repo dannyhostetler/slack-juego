@@ -1,3 +1,8 @@
+/**
+ * This function will return the blocks to initiate a game and gather players to join.
+ * @param {string} channelId 
+ * @param {string} userId 
+ */
 const startGamePost = (channelId, userId) => {
     return {
         "channel": channelId,

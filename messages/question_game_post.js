@@ -1,3 +1,9 @@
+/**
+ * This function will return the blocks to display a question during the game.
+ * @param {string} channel 
+ * @param {string} ts 
+ * @param {Object} question 
+ */
 const questionGamePost = (channel, ts, question) => {
     return {
         channel,

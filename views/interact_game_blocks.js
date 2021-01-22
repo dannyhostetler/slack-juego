@@ -1,3 +1,8 @@
+/**
+ * This function will accept a trigger ID and private metadata string and will ultimately open up a view modal.
+ * @param {string} trigger_id 
+ * @param {string} private_metadata 
+ */
 const interactGameBlocks = (trigger_id, private_metadata) => {
     return {
         trigger_id,

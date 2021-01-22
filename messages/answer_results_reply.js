@@ -1,5 +1,5 @@
 /**
- * This function will return the necessary blocks to display game answer results (in a threaded reply).
+ * This function will return the blocks to display game answer results (in a threaded reply).
  * @param {string} channel 
  * @param {string} thread_ts 
  * @param {string} question 

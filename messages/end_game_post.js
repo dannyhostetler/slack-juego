@@ -1,10 +1,19 @@
+/**
+ * This function will return the blocks to display the final game results.
+ * @param {string} channel 
+ * @param {string} ts 
+ * @param {Array} players 
+ */
+
 const endGamePost = (channel, ts, players) => {
     const sortedPlayers = players.sort((a,b) => {
         return b.score - a.score;
     })
 
+    /**
+     * @todo There is a more effienct way to write these lines of code.
+     */
     let leaderboardString;
-
     let playerNumber = 0;
     for(let player of sortedPlayers){
         if(playerNumber == 0) {

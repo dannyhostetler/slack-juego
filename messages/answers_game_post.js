@@ -1,3 +1,11 @@
+
+/**
+ * This function will return the blocks to dispay answer selections during the game.
+ * @param {string} channel 
+ * @param {string} ts 
+ * @param {Object} question 
+ * @param {Array} answers 
+ */
 const answersGamePost = (channel, ts, question, answers) => {
     let answersArray = [];
 

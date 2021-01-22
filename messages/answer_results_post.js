@@ -1,5 +1,5 @@
 /**
- * This function will return the blocks necessary to display game answer results
+ * This function will return the blocks to display game answer results
  * @param {string} channel 
  * @param {string} ts 
  * @param {Object} question 

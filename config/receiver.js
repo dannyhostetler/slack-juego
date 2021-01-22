@@ -5,7 +5,9 @@ const { guid } = require('../helpers');
 
 const scopes = ['chat:write', 'chat:write:public', 'commands', 'users:read'];
 const AWS_API_URL = process.env.AWS_API_ROOT;
-
+/**
+ * The Express receiver object helps with the Oauth flow and helps with signature verification.
+ */
 const receiver = new ExpressReceiver({
         signingSecret: process.env.SLACK_SIGNING_SECRET,
         clientId: process.env.SLACK_CLIENT_ID,

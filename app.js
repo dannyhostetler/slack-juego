@@ -22,15 +22,20 @@ receiver.router.get('/slack/liveness', (req, res) => {
     res.sendStatus(200);
 })
 
+/**
+ * Publish a customized view when a user opens the app home
+ */
 app.event('app_home_opened', async ({ event, client, say }) => {
     try {
-        await say('👋 App Home opened');
+        await client.views.publish(views.appHome(event.user));
     }
     catch (e) {
         console.log(e);
     }
 });
-
+/**
+ * Respond to the global quick launch callback (start_game) by opening a model view
+ */
 app.shortcut('start_game', async ({ shortcut, ack, client }) => {
     await ack(); // Acknowledge Shortcut
 
@@ -41,6 +46,9 @@ app.shortcut('start_game', async ({ shortcut, ack, client }) => {
     }
 });
 
+/**
+* Upon modal view submision a post will be created to allow players to join
+ */
 app.view('game_started', async ({ ack, body, view, client }) => {
     await ack(); // Acknowledge View Submission
 
@@ -100,7 +108,7 @@ app.view('game_started', async ({ ack, body, view, client }) => {
             }
             gameInfo = await api.gameInfo(ts); // Get game info (again)
             const { players } = gameInfo.data.body;
-            await client.chat.update(messages.endGamePost(channel_id, ts, players)); // Update original with final game results
+            await client.chat.update(messages.endGamePost(channel_id, ts, players)); // Update original post with final game results
 
             players.forEach(async (player) => {
                 await api.playerWrite(player.userId, player.score); // Update the player records
@@ -110,7 +118,9 @@ app.view('game_started', async ({ ack, body, view, client }) => {
         console.log(e);
     }
 });
-
+/**
+ * This function will process the game_anwer_entered callback where players submit their answer (lie)
+ */
 app.view('game_answer_entered', async ({ ack, body, view, client }) => {
     await ack(); // Acknowledge View Submission
 
@@ -130,14 +140,18 @@ app.view('game_answer_entered', async ({ ack, body, view, client }) => {
         });
 
         if (gameUpdate.data.statusCode == 202) {
-            // Send an ephemeral message
-            // A 202 indicates that the player has already entered an answer
+            /**
+             * @todo Send an ephemeral message
+             * A 202 indicates that the player has already entered an answer
+             */
             return;
         }
 
         const { answers } = gameUpdate.data.body.Attributes
 
-        // TODO: This block can be more efficient
+        /**
+         * @todo There is a better way to write the following lines of code
+         */
         let playersString;
         answers.forEach((answer) => {
             if (answer.questionId == questionId && answer.userId != null) {
@@ -145,7 +159,6 @@ app.view('game_answer_entered', async ({ ack, body, view, client }) => {
             }
         });
 
-        // TODO: This block can be more efficient
         for (let i = 0; i < blocks.length; i++) {
             if (blocks[i].block_id == 'answers_submitted') {
                 blocks[i].elements[0].text = `Submitted: ${playersString}`;
@@ -162,7 +175,9 @@ app.view('game_answer_entered', async ({ ack, body, view, client }) => {
     }
 });
 
-
+/**
+ * This function will process a game answer selection and record it in the database.
+ */
 app.action(/^game_answer_selected.*$/, async ({ ack, body, client }) => {
     await ack(); // Acknowledge Callback
 
@@ -183,8 +198,10 @@ app.action(/^game_answer_selected.*$/, async ({ ack, body, client }) => {
         });
 
         if (gameUpdate.data.statusCode == 202) {
-            // Send an ephemeral message
-            // A 202 indicates that the player has already selected an answer
+            /**
+             * @todo Send an ephemeral message
+             * A 202 indicates that the player has already entered an answer
+             */
             return;
         }
 
@@ -209,6 +226,9 @@ app.action(/^game_answer_selected.*$/, async ({ ack, body, client }) => {
     }
 });
 
+/**
+ * This function will handle the callback where a player (user) is ready to enter a answer (lie)
+ */
 app.action(/^fibbage-vote.*$/, async ({ ack, body, client }) => {
     await ack(); // Acknowledge Block Action
 
@@ -226,6 +246,9 @@ app.action(/^fibbage-vote.*$/, async ({ ack, body, client }) => {
     }
 })
 
+/**
+ * This function will process players (users) joining the game and update the database accordingly
+ */
 app.action(/^game_join.*$/, async ({ ack, body, say, client }) => {
     await ack(); // Acknowledge Callback from Slack
 
