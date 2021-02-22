@@ -1,7 +1,7 @@
 {
-  "name": "slack-fibbage",
+  "name": "slack-juego",
   "version": "1.0.0",
-  "description": "Fibbage is the lying, bluffing, fib-till-you-win trivia party game. Fool your colleagues with your lies, avoid theirs, and find the (usually outrageous) truth.",
+  "description": "Juego is spanish for game. Fool your colleagues with your lies, avoid theirs, and find the truth with this fun and engaging app for Slack.",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

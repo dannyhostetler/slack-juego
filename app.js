@@ -50,7 +50,7 @@ app.shortcut('start_game', async ({ shortcut, ack, client }) => {
 * Upon modal view submision a post will be created to allow players to join
  */
 app.view('game_started', async ({ ack, body, view, client }) => {
-    await ack(); // Acknowledge View Submission
+    await ack();
 
     try {
         const { channel_id } = body.response_urls[0];

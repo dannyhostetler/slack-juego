@@ -18,15 +18,17 @@ const startGameBlocks = (trigger_id) => {
             },
             submit: {
                 type: "plain_text",
-                text: "Start"
+                text: "Next"
             },
             blocks: [
                 {
-                    "type": "section",
-                    "text": {
-                        "type": "mrkdwn",
-                        "text": "Fibbage bot will notify everyone in channel that we're going to start a game of Fibbage in *30 seconds* "
-                    }
+                    "type": "context",
+                    "elements": [
+                        {
+                            "type": "mrkdwn",
+                            "text": "Fibbage bot will notify everyone in channel that we're going to start a game of Fibbage in *30 seconds*."
+                        }
+                    ]
                 },
                 {
                     "block_id": "fibbage_channel_select",
